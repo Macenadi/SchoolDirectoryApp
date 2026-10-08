@@ -1,4 +1,5 @@
 ﻿@page "/schools"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 @using SchoolDirectoryApp.Models
 @using SchoolDirectoryApp.Services
@@ -6,6 +7,17 @@
 @inject SchoolService SchoolService
 
 <h3>School Directory</h3>
+
+<div class="mb-3">
+    <input type="text"
+           class="form-control"
+           placeholder="Search schools by name..."
+           @bind="searchText"
+           @bind:event="oninput" />
+</div>
+
+
+
 @if (schools == null)
 {
     <p>Loading schools...</p>
@@ -13,15 +25,16 @@
 
 else
 {
-    @if (selectedSchool != null)
-    {
-        <SchoolDetails School="selectedSchool" />
-    }
-
-    @foreach (var school in schools)
+    
+    @foreach (var school in filteredSchools)
     {
         <SchoolCard School="school"
                     OnSelect="SelectSchool" />
+
+        @if (selectedSchool?.SchoolId == school.SchoolId)
+        {
+            <SchoolDetails School="school" />
+        }
     }
 }
 
@@ -29,6 +42,14 @@ else
 
     private List<School>? schools;
     private School? selectedSchool;
+    private string searchText = "";
+
+    private IEnumerable<School> filteredSchools =>
+    schools?.Where(s =>
+        s.SchoolName?.Contains(
+            searchText,
+            StringComparison.OrdinalIgnoreCase) == true)
+    ?? Enumerable.Empty<School>();
 
     protected override async Task OnInitializedAsync()
     {
