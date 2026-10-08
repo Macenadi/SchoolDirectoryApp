@@ -13,18 +13,30 @@
 
 else
 {
+    @if (selectedSchool != null)
+    {
+        <SchoolDetails School="selectedSchool" />
+    }
+
     @foreach (var school in schools)
     {
-        <SchoolCard School="school" />
+        <SchoolCard School="school"
+                    OnSelect="SelectSchool" />
     }
 }
 
 @code {
 
     private List<School>? schools;
+    private School? selectedSchool;
 
     protected override async Task OnInitializedAsync()
     {
         schools = await SchoolService.GetSchoolsAsync();
+    }
+
+    private void SelectSchool(School school)
+    {
+        selectedSchool = school;
     }
 }
