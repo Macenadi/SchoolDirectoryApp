@@ -18,7 +18,13 @@
 
 
 
-@if (schools == null)
+@if (error)
+{
+    <p class="text-danger">
+        Unable to retrieve school data.
+    </p>
+}
+else if (schools == null)
 {
     <p>Loading schools...</p>
 }
@@ -32,16 +38,17 @@ else
 }
 else
 {
-    @foreach (var school in filteredSchools)
-    {
-        <SchoolCard School="school"
-                    OnSelect="SelectSchool" />
-
-        @if (selectedSchool?.SchoolId == school.SchoolId)
+        @foreach (var school in filteredSchools)
         {
-            <SchoolDetails School="school" />
+            <SchoolCard School="school"
+                        OnSelect="SelectSchool"
+                        IsSelected="@(selectedSchool?.SchoolId == school.SchoolId)" />
+
+            @if (selectedSchool?.SchoolId == school.SchoolId)
+            {
+                <SchoolDetails School="school" />
+            }
         }
-    }
 }
 }
 
@@ -50,6 +57,7 @@ else
     private List<School>? schools;
     private School? selectedSchool;
     private string searchText = "";
+    private bool error = false;
 
     private IEnumerable<School> filteredSchools =>
     schools?.Where(s =>
@@ -60,11 +68,32 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        schools = await SchoolService.GetSchoolsAsync();
+        try
+        {
+            error = false;
+
+            schools = await SchoolService.GetSchoolsAsync();
+
+            if (schools == null)
+            {
+                error = true;
+            }
+        }
+        catch (Exception)
+        {
+            error = true;
+        }
     }
 
     private void SelectSchool(School school)
     {
-        selectedSchool = school;
+        if (selectedSchool?.SchoolId == school.SchoolId)
+        {
+            selectedSchool = null;
+        }
+        else
+        {
+            selectedSchool = school;
+        }
     }
 }

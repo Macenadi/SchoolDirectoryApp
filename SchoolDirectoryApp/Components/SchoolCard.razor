@@ -13,7 +13,7 @@
 
         <button class="btn btn-primary"
                 @onclick="SelectSchool">
-            View Details
+            @(IsSelected ? "Hide Details" : "View Details")
         </button>
 
     </div>
@@ -22,6 +22,9 @@
 @code {
     [Parameter]
     public School School { get; set; } = new School();
+
+    [Parameter]
+    public bool IsSelected { get; set; }
 
     [Parameter]
     public EventCallback<School> OnSelect { get; set; }
