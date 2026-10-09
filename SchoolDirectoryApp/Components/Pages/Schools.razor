@@ -16,6 +16,34 @@
            @bind:event="oninput" />
 </div>
 
+<div class="mb-3">
+    <label class="form-label">Sort schools by name</label>
+
+    <select class="form-select" @bind="sortOrder">
+        <option value="asc">Name (A–Z)</option>
+        <option value="desc">Name (Z–A)</option>
+    </select>
+</div>
+
+<div class="form-check mb-3">
+    <input class="form-check-input"
+           type="checkbox"
+           id="favouritesOnly"
+           @bind="showFavouritesOnly" />
+
+    <label class="form-check-label" for="favouritesOnly">
+        Show Favourites Only
+    </label>
+</div>
+
+
+<div class="mb-3">
+    <button class="btn btn-success"
+            @onclick="LoadSchools">
+        Refresh Schools
+    </button>
+</div>
+
 
 
 @if (error)
@@ -42,7 +70,9 @@ else
         {
             <SchoolCard School="school"
                         OnSelect="SelectSchool"
-                        IsSelected="@(selectedSchool?.SchoolId == school.SchoolId)" />
+                        IsSelected="@(selectedSchool?.SchoolId == school.SchoolId)"
+                        IsFavourite="@favouriteSchoolIds.Contains(school.SchoolId)"
+                        OnFavouriteToggle="ToggleFavourite" />
 
             @if (selectedSchool?.SchoolId == school.SchoolId)
             {
@@ -56,21 +86,54 @@ else
 
     private List<School>? schools;
     private School? selectedSchool;
+    private void ToggleFavourite(School school)
+    {
+        if (favouriteSchoolIds.Contains(school.SchoolId))
+        {
+            favouriteSchoolIds.Remove(school.SchoolId);
+        }
+        else
+        {
+            favouriteSchoolIds.Add(school.SchoolId);
+        }
+    }
     private string searchText = "";
+    private string sortOrder = "asc";
+    private bool showFavouritesOnly = false;
+    private HashSet<int> favouriteSchoolIds = new();
     private bool error = false;
 
     private IEnumerable<School> filteredSchools =>
-    schools?.Where(s =>
-        s.SchoolName?.Contains(
-            searchText,
-            StringComparison.OrdinalIgnoreCase) == true)
-    ?? Enumerable.Empty<School>();
+    (sortOrder == "asc"
+        ? (schools ?? new List<School>())
+            .Where(s =>
+                s.SchoolName?.Contains(
+                    searchText,
+                    StringComparison.OrdinalIgnoreCase) == true
+                && (!showFavouritesOnly ||
+                    favouriteSchoolIds.Contains(s.SchoolId)))
+            .OrderBy(s => s.SchoolName)
+        : (schools ?? new List<School>())
+            .Where(s =>
+                s.SchoolName?.Contains(
+                    searchText,
+                    StringComparison.OrdinalIgnoreCase) == true
+                && (!showFavouritesOnly ||
+                    favouriteSchoolIds.Contains(s.SchoolId)))
+            .OrderByDescending(s => s.SchoolName));
 
     protected override async Task OnInitializedAsync()
+    {
+        await LoadSchools();
+    }
+
+    private async Task LoadSchools()
     {
         try
         {
             error = false;
+            schools = null;
+            selectedSchool = null;
 
             schools = await SchoolService.GetSchoolsAsync();
 

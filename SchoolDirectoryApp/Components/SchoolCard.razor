@@ -16,6 +16,11 @@
             @(IsSelected ? "Hide Details" : "View Details")
         </button>
 
+        <button class="btn btn-outline-warning ms-2"
+                @onclick="ToggleFavourite">
+            @(IsFavourite ? "★ Remove Favourite" : "☆ Add Favourite")
+        </button>
+
     </div>
 </div>
 
@@ -27,10 +32,21 @@
     public bool IsSelected { get; set; }
 
     [Parameter]
+    public bool IsFavourite { get; set; }
+
+    [Parameter]
+    public EventCallback<School> OnFavouriteToggle { get; set; }
+
+    [Parameter]
     public EventCallback<School> OnSelect { get; set; }
 
     private async Task SelectSchool()
     {
         await OnSelect.InvokeAsync(School);
+    }
+
+    private async Task ToggleFavourite()
+    {
+        await OnFavouriteToggle.InvokeAsync(School);
     }
 }
