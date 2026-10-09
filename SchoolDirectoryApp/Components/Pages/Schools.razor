@@ -26,6 +26,12 @@
 else
 {
     
+    @if (!filteredSchools.Any())
+{
+    <p>No schools found.</p>
+}
+else
+{
     @foreach (var school in filteredSchools)
     {
         <SchoolCard School="school"
@@ -36,6 +42,7 @@ else
             <SchoolDetails School="school" />
         }
     }
+}
 }
 
 @code {
