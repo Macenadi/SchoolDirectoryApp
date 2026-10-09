@@ -6,23 +6,34 @@
 
 @inject SchoolService SchoolService
 
-<h3>School Directory</h3>
-
-<div class="mb-3">
-    <input type="text"
-           class="form-control"
-           placeholder="Search schools by name..."
-           @bind="searchText"
-           @bind:event="oninput" />
+<div class="mb-4">
+    <h2 class="fw-bold text-primary">School Directory</h2>
+    <p class="text-muted">
+        Explore, search and manage your favourite schools.
+    </p>
 </div>
 
-<div class="mb-3">
-    <label class="form-label">Sort schools by name</label>
+    <div class="row g-3 mb-3">
 
-    <select class="form-select" @bind="sortOrder">
-        <option value="asc">Name (A–Z)</option>
-        <option value="desc">Name (Z–A)</option>
-    </select>
+    <div class="col-12 col-md-8">
+        <label class="form-label">Search Schools</label>
+
+        <input type="text"
+               class="form-control"
+               placeholder="Search schools by name..."
+               @bind="searchText"
+               @bind:event="oninput" />
+    </div>
+
+    <div class="col-12 col-md-4">
+        <label class="form-label">Sort schools by name</label>
+
+        <select class="form-select" @bind="sortOrder">
+            <option value="asc">Name (A-Z)</option>
+            <option value="desc">Name (Z-A)</option>
+        </select>
+    </div>
+
 </div>
 
 <div class="form-check mb-3">
@@ -43,6 +54,40 @@
         Refresh Schools
     </button>
 </div>
+
+@if (!error && schools != null)
+{
+    <div class="row mb-4">
+
+        <div class="col-md-4 mb-3">
+            <div class="card text-center border-primary">
+                <div class="card-body">
+                    <h5 class="card-title">Total Schools</h5>
+                    <h2 class="text-primary">@TotalSchools</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card text-center border-warning">
+                <div class="card-body">
+                    <h5 class="card-title">Favourite Schools</h5>
+                    <h2 class="text-warning">@TotalFavourites</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card text-center border-success">
+                <div class="card-body">
+                    <h5 class="card-title">Schools Displayed</h5>
+                    <h2 class="text-success">@DisplayedSchools</h2>
+                </div>
+            </div>
+        </div>
+
+    </div>
+}
 
 
 
@@ -102,6 +147,9 @@ else
     private bool showFavouritesOnly = false;
     private HashSet<int> favouriteSchoolIds = new();
     private bool error = false;
+    private int TotalSchools => schools?.Count ?? 0;
+    private int TotalFavourites => favouriteSchoolIds.Count;
+    private int DisplayedSchools => filteredSchools.Count();
 
     private IEnumerable<School> filteredSchools =>
     (sortOrder == "asc"
