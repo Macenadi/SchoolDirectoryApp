@@ -79,4 +79,16 @@ Screenshots of the application will be added to demonstrate:
 - Responsive mobile layout.
 
 
+## Screenshots
 
+The following screenshots demonstrate the main features of the application.
+
+1. [Loading State](screenshots\Loading.png)
+2. [School List](screenshots\SchoolList.png)
+3. [Search Functionality](screenshots/Search.png)
+4. [No Favourite Schools](screenshots/NoFavourites.png)
+5. [Favourite Schools](screenshots/FavoriteSchools.png)
+6. [School Details](screenshots/SchoolDetails.png)
+7. [Sorting Schools](screenshots/Sorting.png)
+8. [Error Handling](screenshots/Error.png)
+  
