@@ -83,8 +83,8 @@ Screenshots of the application will be added to demonstrate:
 
 The following screenshots demonstrate the main features of the application.
 
-1. [Loading State](screenshots\Loading.png)
-2. [School List](screenshots\SchoolList.png)
+1. [Loading State](screenshots/Loading.png)
+2. [School List](screenshots/SchoolList.png)
 3. [Search Functionality](screenshots/Search.png)
 4. [No Favourite Schools](screenshots/NoFavourites.png)
 5. [Favourite Schools](screenshots/FavoriteSchools.png)
