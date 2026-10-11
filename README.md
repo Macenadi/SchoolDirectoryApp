@@ -66,18 +66,6 @@ To run the application:
 
 An internet connection is required to retrieve information from the Edutots API.
 
-## Screenshots
-
-Screenshots of the application will be added to demonstrate:
-
-- School list loaded successfully.
-- Search functionality.
-- School details view.
-- Loading state.
-- Error handling.
-- Statistics dashboard.
-- Responsive mobile layout.
-
 
 ## Screenshots
 
